@@ -7,37 +7,42 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
+import { standardShowPage } from "@/constants";
 import { pageAtom, totalPageAtom } from "@/stores";
 import { useAtom } from "jotai";
-import { useState } from "react";
+import { useMemo } from "react";
 
 function PaginationFooter() {
     const [page, setPage] = useAtom(pageAtom);
     const [totalPage] = useAtom(totalPageAtom);
-    const [currentPage, setCurrentPage] = useState(page);
 
     const handlePrevious = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-            setPage(currentPage - 1);
+        if (page > 1) {
+            setPage(page - 1);
         }
     };
 
     const handleNext = () => {
-        if (currentPage < totalPage) {
-            setCurrentPage(currentPage + 1);
-            setPage(currentPage + 1);
+        if (page < totalPage) {
+            setPage(page + 1);
         }
     };
 
     const handlePageChange = (pageParam: number) => {
         if (pageParam >= 1 && pageParam <= totalPage) {
-            setCurrentPage(pageParam);
             setPage(pageParam);
         }
     };
 
-    const pageNumbers = Array.from({ length: totalPage }, (_, i) => i + 1);
+    const pageNumbers = useMemo(
+        () =>
+            Array.from({ length: totalPage }, (_, i) => i + 1).filter(
+                (pageNum) =>
+                    pageNum >= page - standardShowPage &&
+                    pageNum <= page + standardShowPage
+            ),
+        [page, totalPage]
+    );
 
     return (
         <Pagination>
@@ -45,7 +50,7 @@ function PaginationFooter() {
                 <PaginationItem>
                     <PaginationPrevious onClick={handlePrevious} />
                 </PaginationItem>
-                {currentPage > 5 && (
+                {page > standardShowPage && (
                     <>
                         <PaginationItem>
                             <PaginationLink onClick={() => handlePageChange(1)}>
@@ -55,23 +60,18 @@ function PaginationFooter() {
                         <PaginationEllipsis />
                     </>
                 )}
-                {pageNumbers
-                    .filter(
-                        (page) =>
-                            page >= currentPage - 4 && page <= currentPage + 4
-                    )
-                    .map((page) => (
-                        <PaginationItem key={page}>
-                            <PaginationLink
-                                isActive={page === currentPage}
-                                onClick={() => handlePageChange(page)}
-                            >
-                                {page}
-                            </PaginationLink>
-                        </PaginationItem>
-                    ))}
+                {pageNumbers.map((pageNum) => (
+                    <PaginationItem key={pageNum}>
+                        <PaginationLink
+                            isActive={pageNum === page}
+                            onClick={() => handlePageChange(pageNum)}
+                        >
+                            {pageNum}
+                        </PaginationLink>
+                    </PaginationItem>
+                ))}
 
-                {currentPage < totalPage - 5 && (
+                {page < totalPage - standardShowPage && (
                     <>
                         <PaginationEllipsis />
                         <PaginationItem>
