@@ -13,13 +13,13 @@ import { Bookmark, Trash } from "lucide-react";
 import { useMemo } from "react";
 
 export default function BookmarkPage() {
-    const { bookmarks, toggleBookmarks, removeBookmark } = useBookmark();
+    const { toggleBookmarks, removeBookmark } = useBookmark();
 
     const images = useMemo(() => {
         const storedImages = localStorage.getItem(LOCAL_STORAGE_KEYS.BOOKMARK);
         if (storedImages) return JSON.parse(storedImages);
         else return [];
-    }, [bookmarks]);
+    }, [toggleBookmarks]);
 
     return (
         <section>

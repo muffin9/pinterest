@@ -13,9 +13,13 @@ export default function HomePage() {
                 <Nav />
                 <Banner />
                 <div className="page__container__contents">
-                    {images.map((image: ImageCardType) => {
-                        return <Box key={image.id} data={image} />;
-                    })}
+                    {images.length ? (
+                        images.map((image: ImageCardType) => {
+                            return <Box key={image.id} data={image} />;
+                        })
+                    ) : (
+                        <div>No data ....</div>
+                    )}
                 </div>
             </div>
             <footer>
