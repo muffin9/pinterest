@@ -2,14 +2,14 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 import { SearchIcon } from "lucide-react";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { seaerchValueAtom } from "@/stores";
 
 export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
 const SearchBar = React.forwardRef<HTMLInputElement, InputProps>(
     ({ className, ...props }, ref) => {
-        const [searchValue, setSearchValue] = useAtom(seaerchValueAtom);
+        const setSearchValue = useSetAtom(seaerchValueAtom);
 
         const [inputValue, setInputValue] = React.useState("");
         const searchInputChage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +35,7 @@ const SearchBar = React.forwardRef<HTMLInputElement, InputProps>(
                     {...props}
                     type="search"
                     ref={ref}
-                    className="w-full p-2 placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                    className="bg-white w-full p-2 placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                     onChange={searchInputChage}
                     onKeyDown={handleKeyDown}
                 />

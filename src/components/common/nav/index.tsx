@@ -3,7 +3,7 @@ import { useState } from "react";
 import navJson from "./nav.json";
 import { Link } from "react-router-dom";
 import { seaerchValueAtom } from "@/stores";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 
 interface NavData {
     index: number;
@@ -14,8 +14,8 @@ interface NavData {
 }
 
 function Nav() {
-    const [navMenu, setNavMenu] = useState<NavData[]>(navJson);
-    const [searchValue, setSearchValue] = useAtom(seaerchValueAtom);
+    const [navMenu] = useState<NavData[]>(navJson);
+    const setSearchValue = useSetAtom(seaerchValueAtom);
 
     const handleClickItem = (
         e: React.MouseEvent<HTMLAnchorElement>,

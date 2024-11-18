@@ -3,11 +3,11 @@ import { BookmarkType, ImageCardType } from "@/types/image-type";
 import { useState } from "react";
 
 export function useBookmark() {
-    const initLocalMarkData = JSON.parse(
+    const initLocalBookMarkData = JSON.parse(
         localStorage.getItem(LOCAL_STORAGE_KEYS.BOOKMARK) ?? "[]"
     );
 
-    const initialBookmarks = initLocalMarkData.reduce(
+    const initialBookmarks = initLocalBookMarkData.reduce(
         (acc: { [x: string]: boolean }, bookmark: BookmarkType) => {
             acc[bookmark.id] = bookmark.isBookmarked;
             return acc;

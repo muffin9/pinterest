@@ -20,7 +20,7 @@ function CommonHeader() {
             </div>
             <div className={`${flexRow} gap-2`}>
                 <Link to="/bookmark">
-                    <Button variant="ghost">
+                    <Button>
                         <BookMarked />
                         <span>북마크</span>
                     </Button>
