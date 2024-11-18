@@ -73,7 +73,3 @@ export interface ImageCardType {
     asset_type: string;
     user: UserType;
 }
-
-export interface BookmarkType extends ImageCardType {
-    isBookmarked: boolean;
-}
