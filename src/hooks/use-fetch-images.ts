@@ -18,8 +18,9 @@ export default function useFetchImages() {
                 setTotalPage(res.data.total_pages);
                 toast({
                     variant: "destructive",
-                    title: "title...",
-                    description: "contents...",
+                    title: "API 호출 성공",
+                    description: `Total Pages: ${res.data.total_pages}`,
+                    duration: 2000,
                 });
             }
         } catch (error) {
