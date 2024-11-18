@@ -19,10 +19,22 @@ export function useBookmark() {
         initialBookmarks
     );
 
-    const toggleBookmarks = (data: ImageCardType) => {
-        const localbookMarkData = JSON.parse(
-            localStorage.getItem(LOCAL_STORAGE_KEYS.BOOKMARK) ?? "[]"
+    const getBookmarksFromLocalStorage = () => {
+        const localbookMarkData = localStorage.getItem(
+            LOCAL_STORAGE_KEYS.BOOKMARK
         );
+        return JSON.parse(localbookMarkData ?? "[]");
+    };
+
+    const saveBookmarksToLocalStorage = (updatedBookmarks: BookmarkType[]) => {
+        localStorage.setItem(
+            LOCAL_STORAGE_KEYS.BOOKMARK,
+            JSON.stringify(updatedBookmarks)
+        );
+    };
+
+    const toggleBookmarks = (data: ImageCardType) => {
+        const localbookMarkData = getBookmarksFromLocalStorage();
 
         const findBookmark = localbookMarkData.find(
             (item: BookmarkType) => item.id === data.id
@@ -39,10 +51,7 @@ export function useBookmark() {
             updatedBookmarks = [...localbookMarkData, newData];
         }
 
-        localStorage.setItem(
-            LOCAL_STORAGE_KEYS.BOOKMARK,
-            JSON.stringify(updatedBookmarks)
-        );
+        saveBookmarksToLocalStorage(updatedBookmarks);
 
         setBookmarks((prevBookmarks) => ({
             ...prevBookmarks,
@@ -51,23 +60,19 @@ export function useBookmark() {
     };
 
     const removeBookmark = (imageId: string) => {
-        const localbookMarkData = JSON.parse(
-            localStorage.getItem(LOCAL_STORAGE_KEYS.BOOKMARK) ?? "[]"
-        );
+        const localbookMarkData = getBookmarksFromLocalStorage();
 
         const updatedBookmarks = localbookMarkData.filter(
             (bookmark: BookmarkType) => bookmark.id !== imageId
         );
 
-        localStorage.setItem(
-            LOCAL_STORAGE_KEYS.BOOKMARK,
-            JSON.stringify(updatedBookmarks)
-        );
+        saveBookmarksToLocalStorage(updatedBookmarks);
 
-        setBookmarks((prevBookmarks) => ({
-            ...prevBookmarks,
-            [imageId]: !prevBookmarks[imageId],
-        }));
+        setBookmarks((prevBookmarks) => {
+            const newBookmarks = { ...prevBookmarks };
+            delete newBookmarks[imageId];
+            return newBookmarks;
+        });
     };
 
     return { bookmarks, toggleBookmarks, removeBookmark };
