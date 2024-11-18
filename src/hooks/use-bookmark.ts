@@ -1,40 +1,27 @@
 import { LOCAL_STORAGE_KEYS } from "@/constants";
 import { ImageCardType } from "@/types/image-type";
+import {
+    getBookmarksFromLocalStorage,
+    saveBookmarksToLocalStorage,
+} from "@/utils";
 import { useState } from "react";
 
 export function useBookmark() {
-    const initLocalBookMarkData = JSON.parse(
-        localStorage.getItem(LOCAL_STORAGE_KEYS.BOOKMARK) ?? "[]"
-    );
-
-    const initialBookmarks = initLocalBookMarkData.reduce(
-        (acc: { [x: string]: boolean }, bookmark: ImageCardType) => {
-            acc[bookmark.id] = true;
-            return acc;
-        },
-        {} as { [key: string]: boolean }
-    );
+    const initialBookmarks = getBookmarksFromLocalStorage(
+        LOCAL_STORAGE_KEYS.BOOKMARK
+    ).reduce((acc: { [x: string]: boolean }, bookmark: ImageCardType) => {
+        acc[bookmark.id] = true;
+        return acc;
+    }, {} as { [key: string]: boolean });
 
     const [bookmarks, setBookmarks] = useState<{ [key: string]: boolean }>(
         initialBookmarks
     );
 
-    const getBookmarksFromLocalStorage = () => {
-        const localbookMarkData = localStorage.getItem(
+    const toggleBookmarks = (data: ImageCardType) => {
+        const localbookMarkData = getBookmarksFromLocalStorage(
             LOCAL_STORAGE_KEYS.BOOKMARK
         );
-        return JSON.parse(localbookMarkData ?? "[]");
-    };
-
-    const saveBookmarksToLocalStorage = (updatedBookmarks: ImageCardType[]) => {
-        localStorage.setItem(
-            LOCAL_STORAGE_KEYS.BOOKMARK,
-            JSON.stringify(updatedBookmarks)
-        );
-    };
-
-    const toggleBookmarks = (data: ImageCardType) => {
-        const localbookMarkData = getBookmarksFromLocalStorage();
 
         const findBookmark = localbookMarkData.find(
             (item: ImageCardType) => item.id === data.id
@@ -50,7 +37,10 @@ export function useBookmark() {
             updatedBookmarks = [...localbookMarkData, { ...data }];
         }
 
-        saveBookmarksToLocalStorage(updatedBookmarks);
+        saveBookmarksToLocalStorage(
+            LOCAL_STORAGE_KEYS.BOOKMARK,
+            updatedBookmarks
+        );
 
         setBookmarks((prevBookmarks) => ({
             ...prevBookmarks,
@@ -59,13 +49,18 @@ export function useBookmark() {
     };
 
     const removeBookmark = (imageId: string) => {
-        const localbookMarkData = getBookmarksFromLocalStorage();
+        const localbookMarkData = getBookmarksFromLocalStorage(
+            LOCAL_STORAGE_KEYS.BOOKMARK
+        );
 
         const updatedBookmarks = localbookMarkData.filter(
             (bookmark: ImageCardType) => bookmark.id !== imageId
         );
 
-        saveBookmarksToLocalStorage(updatedBookmarks);
+        saveBookmarksToLocalStorage(
+            LOCAL_STORAGE_KEYS.BOOKMARK,
+            updatedBookmarks
+        );
 
         setBookmarks((prevBookmarks) => {
             const newBookmarks = { ...prevBookmarks };
